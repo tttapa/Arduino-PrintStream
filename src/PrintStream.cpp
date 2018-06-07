@@ -8,6 +8,12 @@ static uint8_t formatPrintStream = DEC;
 static bool boolalphaPrintStream = false;
 static bool leadingZerosPrintStream = true;
 static uint8_t precisionPrintStream = 2;
+static char byteSeparatorPrintStream = '\0';
+enum : char{
+    LOWERCASE = 0x7F,
+    UPPERCASE = 0x5F
+} static casePrintStream = LOWERCASE;
+static bool showbasePrintStream = false;
 
 template <class T>
 Print &printIntegral(Print &printer, T i);
@@ -15,6 +21,26 @@ Print &printIntegral(Print &printer, T i);
 Print &endl(Print &printer) {
   printer.println();
   printer.flush();
+  return printer;
+}
+
+Print &uppercase(Print &printer) {
+  casePrintStream = UPPERCASE;
+  return printer;
+}
+
+Print &nouppercase(Print &printer) {
+  casePrintStream = LOWERCASE;
+  return printer;
+}
+
+Print &showbase(Print &printer) {
+  showbasePrintStream = true;
+  return printer;
+}
+
+Print &noshowbase(Print &printer) {
+  showbasePrintStream = false;
   return printer;
 }
 
@@ -143,6 +169,14 @@ Print &operator<<(Print &printer, _Setbase __f) {
     return printer; 
 }
 
+_Setbytesep setbytesep(char __bytesep) { 
+    return { __bytesep }; 
+}
+Print &operator<<(Print &printer, _Setbytesep __f) {
+    byteSeparatorPrintStream = __f._M_bytesep;
+    return printer; 
+}
+
 _Setprecision setprecision(int __n) {
     return { __n };
 }
@@ -153,7 +187,7 @@ Print &operator<<(Print &printer, _Setprecision __f) {
 
 static char nibble_to_hex(uint8_t nibble) {  // convert a 4-bit nibble to a hexadecimal character
   nibble &= 0xF;
-  return nibble > 9 ? nibble - 10 + 'A' : nibble + '0';
+  return nibble > 9 ? nibble - 10 + 'a' & casePrintStream : nibble + '0';
 }
 
 #if __BYTE_ORDER != __LITTLE_ENDIAN
@@ -163,6 +197,8 @@ static char nibble_to_hex(uint8_t nibble) {  // convert a 4-bit nibble to a hexa
 template <class T>
 void printHex(Print &printer, T val)
 {
+    if (showbasePrintStream)
+        printer.print(F("0x"));
     bool nonZero = false;
     for (int i = sizeof(val) - 1; i >= 0; i--)
     {
@@ -172,8 +208,8 @@ void printHex(Print &printer, T val)
         if (leadingZerosPrintStream || nonZero) {
             printer.print(nibble_to_hex(currByte >> 4));
             printer.print(nibble_to_hex(currByte));
-            if (i)
-                printer.print(' ');
+            if (byteSeparatorPrintStream && i)
+                printer.print(byteSeparatorPrintStream);
         }
     }
 }
@@ -181,6 +217,8 @@ void printHex(Print &printer, T val)
 template <class T>
 void printBin(Print &printer, T val)
 {
+    if (showbasePrintStream)
+        printer.print(F("0b"));
     bool nonZero = false;
     for (int i = sizeof(val) - 1; i >= 0; i--)
     {
@@ -194,8 +232,8 @@ void printBin(Print &printer, T val)
                 printer.print(currBit ? '1' : '0');
             currByte <<= 1;
         }
-        if (i && (leadingZerosPrintStream || nonZero))
-            printer.print(' ');
+        if (byteSeparatorPrintStream && i && (leadingZerosPrintStream || nonZero))
+            printer.print(byteSeparatorPrintStream);
     }
 }
 

@@ -33,6 +33,20 @@ void setup() {
   << (long) 0x80000000 << endl
   << (unsigned long) 0xFFFFFFFF << endl << endl;
 
+  /* Case */
+  Serial << "Case" << endl
+  << uppercase
+  << (uint8_t) 0xFF << endl
+  << nouppercase
+  << (uint8_t) 0xFF << endl << endl;
+
+  /* Show base */
+  Serial << "Show base" << endl
+  << showbase
+  << (uint8_t) 0xFF << endl
+  << noshowbase
+  << (uint8_t) 0xFF << endl << endl;
+
   /* Decimal */
   Serial << "Decimal" << endl
   << dec
@@ -84,6 +98,19 @@ void setup() {
   << leadingzeros
   << (uint8_t) 0x08 << endl
   << (uint8_t) 0x01 << endl << endl;
+
+  /* Byte separators */  
+  Serial << "Byte separators" << endl
+  << setbytesep(' ')
+  << (int) 0xAAAA << endl
+  << hex
+  << (int) 0xAAAA << endl;
+  Serial
+  << setbytesep('\0')
+  << bin
+  << 0xAAAA << endl
+  << hex
+  << 0xAAAA << endl << endl;
 
   /* Printable */
   struct HelloWorld : public Printable {

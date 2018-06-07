@@ -15,6 +15,11 @@ Print &boolalpha(Print &printer);
 Print &noboolalpha(Print &printer);
 Print &leadingzeros(Print &printer);
 Print &noleadingzeros(Print &printer);
+Print &uppercase(Print &printer);
+Print &nouppercase(Print &printer);
+Print &showbase(Print &printer);
+Print &noshowbase(Print &printer);
+
 
 Print &operator<<(Print &printer, const __FlashStringHelper *s);
 Print &operator<<(Print &printer, const String &s);
@@ -40,6 +45,11 @@ struct _Setprecision { int _M_n; };
 _Setprecision setprecision(int __n);
 Print &operator<<(Print &printer, _Setprecision __f);
 
+struct _Setbytesep { char _M_bytesep; };
+_Setbytesep setbytesep(char __bytesep);
+Print &operator<<(Print &printer, _Setbytesep __f);
+
+
 #else // #ifndef ARDUINO
 
 #include <iostream>
@@ -53,6 +63,10 @@ using std::hex;
 using std::flush;
 using std::boolalpha;
 using std::noboolalpha;
+using std::uppercase;
+using std::nouppercase;
+using std::showbase;
+using std::noshowbase;
 
 #endif
 
