@@ -187,7 +187,7 @@ Print &operator<<(Print &printer, _Setprecision __f) {
 
 static char nibble_to_hex(uint8_t nibble) {  // convert a 4-bit nibble to a hexadecimal character
   nibble &= 0xF;
-  return nibble > 9 ? nibble - 10 + 'a' & casePrintStream : nibble + '0';
+  return nibble > 9 ? nibble - 10 + ('a' & casePrintStream) : nibble + '0';
 }
 
 #if __BYTE_ORDER != __LITTLE_ENDIAN
