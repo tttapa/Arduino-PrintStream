@@ -7,6 +7,10 @@
 static uint8_t formatPrintStream = DEC;
 static bool boolalphaPrintStream = false;
 static bool leadingZerosPrintStream = true;
+static uint8_t precisionPrintStream = 2;
+
+template <class T>
+Print &printIntegral(Print &printer, T i);
 
 Print &endl(Print &printer) {
   printer.println();
@@ -15,7 +19,7 @@ Print &endl(Print &printer) {
 }
 
 Print &flush(Print &printer) {
-  printer.println();
+  printer.flush();
   return printer;
 }
 
@@ -92,7 +96,7 @@ Print &operator<<(Print &printer, unsigned long i) {
     return printIntegral(printer, i);
 }
 Print &operator<<(Print &printer, double d) {
-    printer.print(d);
+    printer.print(d, precisionPrintStream);
     return printer;
 }
 Print &operator<<(Print &printer, const Printable& p) {
@@ -139,6 +143,13 @@ Print &operator<<(Print &printer, _Setbase __f) {
     return printer; 
 }
 
+_Setprecision setprecision(int __n) {
+    return { __n };
+}
+Print &operator<<(Print &printer, _Setprecision __f) {
+    precisionPrintStream = __f._M_n;
+    return printer;
+}
 
 static char nibble_to_hex(uint8_t nibble) {  // convert a 4-bit nibble to a hexadecimal character
   nibble &= 0xF;
@@ -174,16 +185,17 @@ void printBin(Print &printer, T val)
     for (int i = sizeof(val) - 1; i >= 0; i--)
     {
         uint8_t currByte = ((uint8_t *)&val)[i]; 
-        if (currByte != 0 || i == 0)
-            nonZero = true;
-        if (leadingZerosPrintStream || nonZero) {
-            for (int j = 7; j >= 0; j--)
-            {
-                printer.print(currByte & (1 << j) ? '1' : '0');
-            }
-            if (i)
-                printer.print(' ');
+        for (int j = 7; j >= 0; j--)
+        {
+            uint8_t currBit = currByte & 0x80;
+            if (currBit != 0 || (i == 0 && j == 0))
+                nonZero = true;
+            if (leadingZerosPrintStream || nonZero)
+                printer.print(currBit ? '1' : '0');
+            currByte <<= 1;
         }
+        if (i && (leadingZerosPrintStream || nonZero))
+            printer.print(' ');
     }
 }
 

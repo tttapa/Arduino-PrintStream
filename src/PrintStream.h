@@ -10,7 +10,7 @@ Print &flush(Print &printer);
 Print &hex(Print &printer);
 Print &bin(Print &printer);
 Print &dec(Print &printer);
-Print &oct(Print &printer);
+/* Print &oct(Print &printer); */
 Print &boolalpha(Print &printer);
 Print &noboolalpha(Print &printer);
 Print &leadingzeros(Print &printer);
@@ -32,19 +32,27 @@ Print &operator<<(Print &printer, bool b);
 
 Print &operator<<(Print &printer, manipulator pf);
 
-struct _Setbase {
-    uint8_t _M_base; 
-};
+struct _Setbase { uint8_t _M_base; };
 _Setbase setbase(uint8_t __base);
 Print &operator<<(Print &printer, _Setbase __f);
 
-template <class T>
-Print &printIntegral(Print &printer, T i);
+struct _Setprecision { int _M_n; };
+_Setprecision setprecision(int __n);
+Print &operator<<(Print &printer, _Setprecision __f);
 
 #else // #ifndef ARDUINO
 
 #include <iostream>
+#include <iomanip>
+
 using std::endl;
+using std::setbase;
+using std::setprecision;
+using std::dec;
+using std::hex;
+using std::flush;
+using std::boolalpha;
+using std::noboolalpha;
 
 #endif
 
