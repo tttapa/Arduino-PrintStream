@@ -24,7 +24,7 @@ void setup() {
   << (unsigned long) 0xFFFFFFFF << endl << endl;
 
   /* Hexadecimal */
-  Serial << "Hexacimal" << endl
+  Serial << "Hexadecimal" << endl
   << hex 
   << (int8_t) 0x80 << endl
   << (uint8_t) 0xFF << endl
