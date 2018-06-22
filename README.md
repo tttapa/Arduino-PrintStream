@@ -1,6 +1,6 @@
 # Arduino-PrintStream
 
-A simple library, that adds `std::cout`-like support for the Arduino (using the `&lt;&lt;`-operator).
+A simple library, that adds `std::cout`-like support for the Arduino (using the `<<`-operator).
 
 ## Example usage
 
